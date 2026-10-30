@@ -1,10 +1,10 @@
 # Agente de Viajes con Strands SDK y Amazon Bedrock
 
-Este proyecto implementa un agente de viajes conversacional inteligente desarrollado con **Strands SDK** y **Amazon Bedrock**, desplegado en una arquitectura serverless sobre **AWS Lambda** con memoria de sesión en **Amazon DynamoDB** e infraestructura como código gestionada por **AWS SAM (Serverless Application Model)**.
+Este proyecto implementa un agente de viajes conversacional inteligente desarrollado con **Strands SDK** y **Amazon Bedrock**, desplegado en una arquitectura serverless sobre **AWS Lambda** con memoria de sesión en **Amazon DynamoDB** e infraestructura como código gestionada por **AWS SAM**.
 
 ---
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 Asegúrate de contar con las siguientes herramientas instaladas y configuradas en tu entorno local:
 
@@ -18,22 +18,14 @@ Asegúrate de contar con las siguientes herramientas instaladas y configuradas e
 
 ## 🛠️ Configuración e Instalación Paso a Paso
 
-### 1. Clonar e Inicializar el Repositorio
-
-```bash
-git clone <URL_DE_TU_REPOSITORIO_GIT>
-cd skillbuilder-strands
-git init
-```
-
-### 2. Crear y Activar el Entorno Virtual
+### 1. Crear y Activar el Entorno Virtual
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Instalar Dependencias del Proyecto
+### 2. Instalar Dependencias del Proyecto
 
 ```bash
 pip install --upgrade pip
@@ -42,7 +34,7 @@ pip install -r src/requirements.txt
 
 ---
 
-## 🚀 Compilación y Despliegue en AWS
+## Compilación y Despliegue en AWS
 
 El despliegue en AWS se realiza de forma automatizada a través de AWS SAM:
 
@@ -63,7 +55,7 @@ sam deploy --guided
 O utilizando un perfil específico de AWS CLI configurado:
 
 ```bash
-sam build --use-container && sam deploy --profile PS-PowerUserAccess-891377180652
+sam build --use-container && sam deploy --profile XXXXXXXXXXXXXX
 ```
 
 Al finalizar el despliegue, la consola de SAM devolverá la **URL pública de la función Lambda** (`LambdaFunctionUrl`).
@@ -102,7 +94,7 @@ curl -X POST <TU_LAMBDA_FUNCTION_URL> \
 
 ---
 
-## 🧱 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```text
 skillbuilder-strands/
@@ -119,7 +111,7 @@ skillbuilder-strands/
 
 ---
 
-## 🏛️ Componentes de Arquitectura
+## Componentes de Arquitectura
 
 - **Framework de Agentes**: Strands SDK
 - **Modelo de Lenguaje**: Amazon Bedrock
