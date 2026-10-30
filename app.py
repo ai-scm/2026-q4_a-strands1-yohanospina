@@ -11,7 +11,7 @@ st.set_page_config(
 
 st.title("✈️ Agente de Viajes con Strands SDK & Amazon Bedrock")
 
-# Asegúrate de mantener la URL de tu API Gateway / Lambda Function URL
+# URL de la API Gateway / Lambda Function URL
 LAMBDA_URL = (
     "https://pxohlk3jp26643sar7qi3yjimm0gqxqu.lambda-url.us-east-1.on.aws/"
 )
