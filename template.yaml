@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Agente de IA con Strands SDK accesible vía HTTP URL para clientes finales
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+
+Resources:
+  StrandsAgentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: lambda_function.handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+            - "*"
+          AllowMethods:
+            - POST
+            - GET
+          AllowHeaders:
+            - "*"
+      Environment:
+        Variables:
+          SESSION_TABLE_NAME: !Ref SessionTable
+          TRAVEL_DOCS_BUCKET: !Sub "strands-travel-docs-${AWS::AccountId}"
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+                - bedrock:InvokeModelWithResponseStream
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+              Resource: !GetAtt SessionTable.Arn
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:ListBucket
+              Resource:
+                - !Sub "arn:aws:s3:::strands-travel-docs-${AWS::AccountId}"
+                - !Sub "arn:aws:s3:::strands-travel-docs-${AWS::AccountId}/*"
+
+  SessionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: StrandsAgentSessions
+      AttributeDefinitions:
+        - AttributeName: SessionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: SessionId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+Outputs:
+  StrandsAgentFunctionUrl:
+    Description: URL publica HTTPS del agente para el cliente final
+    Value: !GetAtt StrandsAgentFunctionUrl.FunctionUrl

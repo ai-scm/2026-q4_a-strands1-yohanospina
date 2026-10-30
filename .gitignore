@@ -1,0 +1,30 @@
+# Python y entornos virtuales
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+
+# AWS SAM
+.aws-sam/
+
+# Entorno local y secretos
+.env
+.env.*
+!.env.example
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Configuración local de IDEs
+.vscode/
+.idea/
+
+# Datos temporales de Streamlit
+.streamlit/secrets.toml
+
+
+response.json
