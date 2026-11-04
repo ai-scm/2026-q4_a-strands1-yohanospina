@@ -4,7 +4,7 @@ Description: Agente de IA con Strands SDK accesible vía HTTP URL para clientes 
 
 Globals:
   Function:
-    Timeout: 30
+    Timeout: 60
     MemorySize: 512
 
 Resources:
@@ -30,12 +30,15 @@ Resources:
         Variables:
           SESSION_TABLE_NAME: !Ref SessionTable
           TRAVEL_DOCS_BUCKET: !Sub "strands-travel-docs-${AWS::AccountId}"
+          KNOWLEDGE_BASE_ID: "CRARHWSMK0"
       Policies:
         - Statement:
             - Effect: Allow
               Action:
                 - bedrock:InvokeModel
                 - bedrock:InvokeModelWithResponseStream
+                - bedrock:Retrieve
+                - bedrock:RetrieveAndGenerate
               Resource: "*"
             - Effect: Allow
               Action:

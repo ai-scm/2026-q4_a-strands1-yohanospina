@@ -7,7 +7,7 @@ import boto3
 from strands import Agent, tool
 
 # Lectura segura de la variable de entorno para evitar KeyError al importar
-SESSIONS_TABLE_NAME = os.environ.get("SESSIONS_TABLE", "strands-agent-sessions")
+SESSIONS_TABLE_NAME = os.environ.get("SESSION_TABLE_NAME", "StrandsAgentSessions")
 ddb = boto3.resource("dynamodb")
 table = ddb.Table(SESSIONS_TABLE_NAME)
 
@@ -15,7 +15,7 @@ table = ddb.Table(SESSIONS_TABLE_NAME)
 def get_session_history(session_id: str) -> list:
     """Recupera el historial de conversación desde DynamoDB."""
     try:
-        response = table.get_item(Key={"sessionID": session_id})
+        response = table.get_item(Key={"SessionId": session_id})
         if "Item" in response:
             return json.loads(response["Item"]["messages"])
         return []
@@ -28,7 +28,7 @@ def save_session_history(session_id: str, messages: list) -> None:
     """Guarda el historial actualizado en DynamoDB."""
     try:
         table.put_item(
-            Item={"sessionID": session_id, "messages": json.dumps(messages)}
+            Item={"SessionId": session_id, "messages": json.dumps(messages)}
         )
     except Exception as e:
         print(f"Error guardando historial: {e}")
@@ -60,6 +60,7 @@ def retrieve(query: str) -> str:
         ]
         return "\n---\n".join(chunks)
     except Exception as e:
+        print(f"ERROR en retrieve tool: {type(e).__name__}: {str(e)}")
         return f"Error consultando la Knowledge Base: {str(e)}"
 
 
@@ -117,10 +118,19 @@ def handler(event: Dict[str, Any], _context) -> Dict[str, Any]:
 
         history = get_session_history(session_id)
 
+        # Convertir historial plano al formato de mensajes que espera Strands
+        strands_messages = []
+        for msg in history:
+            strands_messages.append({
+                "role": msg["role"],
+                "content": [{"text": msg["content"]}]
+            })
+
         agent = Agent(
             model="us.amazon.nova-lite-v1:0",
             system_prompt=TRAVEL_AGENT_PROMPT,
             tools=[flight_search, http_request, retrieve],
+            messages=strands_messages,
         )
 
         response_text = str(agent(prompt))
@@ -138,9 +148,9 @@ def handler(event: Dict[str, Any], _context) -> Dict[str, Any]:
     except Exception as e:
         print(f"Error procesando solicitud en Lambda: {e}")
         return {
-            "statusCode": 200,
+            "statusCode": 500,
             "headers": {"Content-Type": "application/json"},
             "body": json.dumps(
-                {"response": f"Detalle del error en Lambda: {str(e)}"}
+                {"error": f"Error interno en Lambda: {str(e)}"}
             ),
         }

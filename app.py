@@ -43,7 +43,7 @@ if prompt := st.chat_input("Escribe tu consulta sobre tours o viajes..."):
                     "prompt": prompt,
                     "user": {"session_id": st.session_state.session_id},
                 }
-                response = requests.post(LAMBDA_URL, json=payload, timeout=30)
+                response = requests.post(LAMBDA_URL, json=payload, timeout=90)
                 if response.status_code == 200:
                     data = response.json()
                     # Extraer respuesta según el formato retornado
