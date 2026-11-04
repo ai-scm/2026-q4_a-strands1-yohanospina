@@ -30,7 +30,7 @@ echo "  ✅ Credenciales OK"
 # 2. Build y Deploy del stack SAM (Lambda + DynamoDB + IAM + Function URL)
 echo ""
 echo "[2/5] Build y Deploy del stack SAM..."
-~/.local/bin/sam build --use-container --quiet
+~/.local/bin/sam build --use-container 2>&1 | grep -E "Build Succeeded|error|Error" || true
 ~/.local/bin/sam deploy \
     --profile $PROFILE \
     --no-confirm-changeset \
@@ -80,7 +80,7 @@ else
         echo "  Actualizando KNOWLEDGE_BASE_ID en template.yaml..."
         sed -i "s/KNOWLEDGE_BASE_ID: \"$CURRENT_KB\"/KNOWLEDGE_BASE_ID: \"$KB_ID\"/" template.yaml
         # Redeploy con el KB ID correcto
-        ~/.local/bin/sam build --use-container --quiet
+        ~/.local/bin/sam build --use-container 2>&1 | grep -E "Build Succeeded|error|Error" || true
         ~/.local/bin/sam deploy \
             --profile $PROFILE \
             --no-confirm-changeset \
