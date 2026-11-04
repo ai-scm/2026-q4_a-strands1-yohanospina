@@ -1,4 +1,4 @@
-# ✈️ Agente de Viajes con Strands SDK & Amazon Bedrock
+# Agente de Viajes con Strands SDK & Amazon Bedrock
 
 Agente conversacional de viajes construido con **Strands SDK** y **Amazon Bedrock Nova Lite**, desplegado en arquitectura serverless sobre **AWS Lambda**. Consolida búsqueda de vuelos, clima en tiempo real y guías turísticas en una sola conversación natural, con memoria de sesión persistente en **DynamoDB** y búsqueda semántica RAG sobre documentos propios vía **Bedrock Knowledge Base**.
 
@@ -52,13 +52,7 @@ python3 -m venv .venv
 .venv/bin/pip install streamlit requests
 ```
 
-### 2. Login en AWS
-
-```bash
-aws sso login --profile blend360
-```
-
-### 3. Levantar todo el stack en AWS
+### 2. Levantar todo el stack en AWS
 
 ```bash
 ./deploy.sh
@@ -73,13 +67,13 @@ El script hace automáticamente:
 
 > **Primera vez:** si la Knowledge Base no existe, el script te guía para crearla en la consola de Bedrock (~2 min).
 
-### 4. Abrir la interfaz gráfica
+### 3. Abrir la interfaz gráfica
 
 ```bash
 .venv/bin/streamlit run app.py
 ```
 
-Abre `http://localhost:8501` en el navegador.
+Abre `http://localhost:8502` en el navegador.
 
 ---
 
@@ -131,17 +125,3 @@ skillbuilder-strands/
 ├── travel_guides.txt         # Documentos fuente para la Knowledge Base
 └── .gitignore
 ```
-
----
-
-## Costos en reposo
-
-| Componente | Costo sin tráfico |
-|---|---|
-| Lambda | $0.00 |
-| DynamoDB | $0.00 |
-| Bedrock (Nova Lite) | $0.00 |
-| **OpenSearch Serverless (KB)** | **~$0.24/hora** |
-| S3 | ~$0.00 |
-
-Ejecuta `./teardown.sh` cuando no lo estés usando.
